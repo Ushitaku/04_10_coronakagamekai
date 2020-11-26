@@ -1,0 +1,121 @@
+body{
+    margin: 0 auto;
+    background-color:black;
+    text-align: center;
+font-family: tbcgothic-std, sans-serif;
+font-weight: 800;
+font-style: normal;
+}
+
+/* モーダルの設定 */
+.modal{
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position:  center;
+    color: white;
+    font-size: 50px;
+    z-index: 1;
+    background-color: black;
+    position: fixed;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* display: none; */
+}
+
+.modal-text{
+    opacity: 0; /* ←初期値を変更。透明に。*/
+  animation: 3s fadeIn forwards; /* ←追加 */
+}
+@keyframes fadeIn { /* ←追加 */
+  from { opacity: 0; }
+  to { opacity: 1.0; }
+}
+
+
+.button-wrapper{
+    margin-top: 20px;
+}
+
+/* タイトルの設定 */
+.title{
+    margin: 0 auto;
+    font-size: 50px;
+    background-color:rgb(255, 255, 255);
+    margin-bottom: 0px;
+    /* visibility: hidden; */
+}
+
+.info{
+    font-size: 1.5em;
+    color: white;
+    margin: 0px;
+    /* visibility: hidden; */
+}
+
+.top-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 得点・ */
+ul{
+    list-style: none;
+    display: flex;
+}
+
+li{
+    color: white;
+    font-size: 25px;
+}
+
+
+/* ボタンレイアウト・装飾 */
+.button{
+    font-family:tbcgothic-std, sans-serif;
+    margin-top: 5px;
+    padding-bottom: 10px ;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+  color: white;
+  background: black;
+  border-bottom: solid 4px black;
+  border-radius: 15px;
+  transition: .4s;
+}
+
+.button:hover{
+    background: #ffc25c;
+    color: #FFF;
+}
+
+/* ゲーム画面の設定 */
+.field {
+    position: relative;
+    top: 10px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 800px;
+    height: 550px;
+    border: solid 4px;
+    background-image: url(../img/background.png);
+}
+
+.target {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 12.5%;
+    height: 18%;
+    cursor: pointer;
+    background-image: url(../img/ka1.png);
+}
+
+.target:active{
+    background-image: url(../img/ka2.png);
+}

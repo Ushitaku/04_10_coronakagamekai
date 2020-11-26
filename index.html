@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/game.css">
+
+  <!-- フォントの設定 -->
+  <script>
+    (function (d) {
+      var config = {
+        kitId: 'cia7lks',
+        scriptTimeout: 3000,
+        async: true
+      },
+        h = d.documentElement, t = setTimeout(function () { h.className = h.className.replace(/\bwf-loading\b/g, "") + " wf-inactive"; }, config.scriptTimeout), tk = d.createElement("script"), f = false, s = d.getElementsByTagName("script")[0], a; h.className += " wf-loading"; tk.src = 'https://use.typekit.net/' + config.kitId + '.js'; tk.async = true; tk.onload = tk.onreadystatechange = function () { a = this.readyState; if (f || a && a != "complete" && a != "loaded") return; f = true; clearTimeout(t); try { Typekit.load(config) } catch (e) { } }; s.parentNode.insertBefore(tk, s)
+    })(document);
+  </script>
+
+  <!-- firebaseのスクリプト -->
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+       https://firebase.google.com/docs/web/setup#available-libraries -->
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyAQLd5kOawTK0HN3yJbSHyD3Xa3TNDJZw8",
+      authDomain: "coronakagame-10.firebaseapp.com",
+      databaseURL: "https://coronakagame-10.firebaseio.com",
+      projectId: "coronakagame-10",
+      storageBucket: "coronakagame-10.appspot.com",
+      messagingSenderId: "133824610503",
+      appId: "1:133824610503:web:051e663dc82e688401bee2"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <title>コロナ蚊を倒すゲーム</title>
+
+</head>
+
+<body>
+  <main>
+    <!-- モーダル -->
+    <div class="modal">
+      <div class="modal-wrapper">
+        <div class="modal-text">
+          あなたはコロナ蚊という強力なウイルスを持つ蚊が<br>はびこる世に生まれてしまいました・・・。</br>
+          この災難を乗り越えるためにはあなたの力が必要です。<br>1匹でも多く倒し世界を救いましょう。
+        </div>
+        <div class="button-wrapper">
+          <input type="button" id="modal-start" class="button" value="ゲームを始める">
+          <input type="button" id="modal-score" class="button" value="スコア画面">
+        </div>
+      </div>
+    </div>
+    <!-- タイトル画面 -->
+    <h1 class="title">コロナ蚊を倒すゲーム</h1>
+    <p class="info">コロナ蚊をクリックして倒すと100ポイント。制限時間は15秒間。</p>
+    <p class="info">500ポイント以下だと次回難易度が上がります</p>
+    <!-- トップ画面 -->
+    <div class="top-wrapper">
+      <div class="control">
+        <input type="button" class="button" id="start_button" value="スタート">
+        <input type="button" class="button" id="stop_button" value="休憩">
+        <input type="button" class="button save" id="save" value="スコア保存">
+        <input type="button" class="button delete" id="delete" value="スコア削除">
+      </div>
+      <div class="scorespace">
+        <ul>
+          <li>制限時間:</li>
+          <li class="limit"></li>
+        </ul>
+        <ul>
+          <li>得点:</li>
+          <li class="score" id="score"></li>
+        </ul>
+      </div>
+    </div>
+    <div class="field">
+      <div class="target"></div>
+
+    </div>
+
+  </main>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+    // モーダルを消す設定
+    $('#modal-start').click(function () {
+      $('.modal').fadeOut();
+    });
+
+    // ゲーム動作
+    $(function () {
+
+      function move() {
+        //通常モード：0～50の乱数で蚊を動かす
+        $(".target").animate({
+          'top': Math.round(Math.random() * 50) + "%",
+          'left': Math.round(Math.random() * 50) + "%"
+        }, 200);
+      }
+
+      // スタートボタンを押すとカウントダウン
+      $('#start_button').click(function () {
+        cnt = 15; //10秒前からカウントスタート
+        $('.limit').text(cnt);
+        cnDown = setInterval(function () { //1秒おきにカウントマイナス
+          cnt--;
+          if (cnt <= 0) {   //0になったら停止する
+            clearInterval(cnDown);   //カウントダウン停止
+            clearInterval(TIMER);    //タイマー停止
+          }
+          $('.limit').text(cnt);
+        }, 1000);
+        TIMER = setInterval(function () { move() }, 500);
+      });
+
+      // 休憩ボタンを押すと時間と動きが止まる
+      $('#stop_button').click(function () {
+        clearInterval(TIMER);
+        clearInterval(cnDown);
+      });
+
+      var score = 0;  //スコアの点数格納用
+
+      // 蚊を押すと100点入る
+      $('.target').click(function () {
+        score += 100; //100点を加算
+        // console.log(score);
+        $('.score').html(score); //画面右上の得点表に加算得点を反映
+      });
+
+      // 得点を保存
+      $('#save').on('click', function () {
+        const figure = score;
+        localStorage.setItem('total', figure);
+      });
+
+      // 得点を削除する
+      $('#delete').on('click', function () {
+        localStorage.removeItem('total');
+      });
+
+      //パンデミックモード：0～100の乱数で蚊を動かす
+
+
+    });
+
+
+  </script>
+
+</body>
+
+</html>
