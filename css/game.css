@@ -15,7 +15,7 @@ font-style: normal;
     background-position:  center;
     color: white;
     font-size: 50px;
-    z-index: 1;
+    z-index: 2;
     background-color: black;
     position: fixed;
     text-align: center;
@@ -81,8 +81,8 @@ li{
     text-align: center;
     text-decoration: none;
     font-size: 20px;
-  color: white;
-  background: black;
+  color: black;
+  background: white;
   border-bottom: solid 4px black;
   border-radius: 15px;
   transition: .4s;
@@ -91,6 +91,19 @@ li{
 .button:hover{
     background: #ffc25c;
     color: #FFF;
+}
+
+.form{
+    margin-top: 5px;
+    padding-bottom: 10px ;
+    border-color: #FFF;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+  color: black;
+  background: white;
+
 }
 
 /* ゲーム画面の設定 */
@@ -119,3 +132,38 @@ li{
 .target:active{
     background-image: url(../img/ka2.png);
 }
+
+/* ランキング登録フォーム */
+.ranking-entry{
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position:  center;
+    color: white;
+    font-size: 50px;
+    z-index: 1;
+    background-color: black;
+    position: fixed;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+/* ランキング一覧 */
+.ranking{
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position:  center;
+    color: white;
+    font-size: 50px;
+    z-index: 1;
+    background-color: black;
+    position: fixed;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;

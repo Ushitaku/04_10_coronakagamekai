@@ -38,6 +38,9 @@
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+
+    // クラウドの場所を定義
+    var db = firebase.firestore().collection('coronakagame-10')
   </script>
 
   <title>コロナ蚊を倒すゲーム</title>
@@ -59,6 +62,33 @@
         </div>
       </div>
     </div>
+    <!-- スコア画面 -->
+    <div class="ranking-entry">
+      <div class="ranking-entry-wrapper">
+        <div class="modal-text">
+          あなたのおかげで少しだけ世の中が元気になりました。<br>
+          ぜひ歴史に名を刻んでください。</br>
+        </div>
+        <div class="form-wrapper">
+          <input type="form" id="name" class="form" value="名前を入力してください">
+        </div>
+        <div class="ranking-button">
+          <input type="button" id="top-return" class="button" value="TOPへ戻る">
+          <input type="button" id="score-entry" class="button" value="スコアを登録する">
+        </div>
+      </div>
+    </div>
+    <!--ランキング画面-->
+    <div class="ranking">
+      <div class="ranking-wrapper">
+        <div class="ranking-text">
+          歴史に名を刻んだ勇者の皆様です！！
+        </div>
+        <div class="button-wrapper">
+        </div>
+      </div>
+    </div>
+
     <!-- タイトル画面 -->
     <h1 class="title">コロナ蚊を倒すゲーム</h1>
     <p class="info">コロナ蚊をクリックして倒すと100ポイント。制限時間は15秒間。</p>
@@ -68,8 +98,7 @@
       <div class="control">
         <input type="button" class="button" id="start_button" value="スタート">
         <input type="button" class="button" id="stop_button" value="休憩">
-        <input type="button" class="button save" id="save" value="スコア保存">
-        <input type="button" class="button delete" id="delete" value="スコア削除">
+        <input type="button" class="button save" id="save" value="スコア登録">
       </div>
       <div class="scorespace">
         <ul>
@@ -95,6 +124,26 @@
     $('#modal-start').click(function () {
       $('.modal').fadeOut();
     });
+
+    // モーダルからランキング画面の切り替え
+    $('#modal-score').click(function () {
+      $('.modal').fadeOut();
+      $('.ranking').fadeIn();
+    });
+
+    // スコア登録画面からモーダルに戻る設定
+    $('#top-return').click(function () {
+      $('.ranking').fadeOut();
+      $('.modal').fadeIn();
+    });
+
+    // // スコアを登録を押すとランキング画面に遷移
+    // $('.ranking-entry').on(click, function () {
+    //   $('.ranking-entry').fadeOut();
+    //   $('.ranking').fadeIn();
+    // });
+
+
 
     // ゲーム動作
     $(function () {
@@ -137,16 +186,11 @@
         $('.score').html(score); //画面右上の得点表に加算得点を反映
       });
 
-      // 得点を保存
-      $('#save').on('click', function () {
-        const figure = score;
-        localStorage.setItem('total', figure);
+      // 得点を保存を押すとスコア画面に遷移
+      $('#save').click(function () {
+        $('.ranking-entry').fadeIn();
       });
 
-      // 得点を削除する
-      $('#delete').on('click', function () {
-        localStorage.removeItem('total');
-      });
 
       //パンデミックモード：0～100の乱数で蚊を動かす
 
