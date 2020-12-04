@@ -28,7 +28,7 @@
   <script>
     // Your web app's Firebase configuration
     var firebaseConfig = {
-      apiKey: "",
+      apiKey: "AIzaSyAQLd5kOawTK0HN3yJbSHyD3Xa3TNDJZw8",
       authDomain: "coronakagame-10.firebaseapp.com",
       databaseURL: "https://coronakagame-10.firebaseio.com",
       projectId: "coronakagame-10",
@@ -84,7 +84,14 @@
         <div class="ranking-text">
           歴史に名を刻んだ勇者の皆様です！！
         </div>
+        <li id="output">
+          <p>名前</p>
+          <p>得点</p>
+          <p>時間</p>
+        </li>
         <div class="button-wrapper">
+          <input type="button" id="ranking-start" class="button" value="ゲームを始める">
+          <input type="button" id="ranking-top-return" class="button" value="TOPへ戻る">
         </div>
       </div>
     </div>
@@ -137,13 +144,23 @@
       $('.modal').fadeIn();
     });
 
+    // ランキング画面からゲーム画面に戻る
+    $('#ranking-start').click(function () {
+      $('.ranking').fadeOut();
+      $('.top-wrapper').fadeIn();
+    });
+
+    // ランキング画面からTOPに戻る
+    $('#ranking-top-return').click(function () {
+      $('.ranking').fadeOut();
+      $('.modal').fadeIn();
+    });
+
     // // スコアを登録を押すとランキング画面に遷移
-    // $('.ranking-entry').on(click, function () {
-    //   $('.ranking-entry').fadeOut();
-    //   $('.ranking').fadeIn();
-    // });
-
-
+    $('#score-entry').click(function () {
+      $('.ranking-entry').fadeOut();
+      $('.ranking').fadeIn();
+    });
 
     // ゲーム動作
     $(function () {
@@ -158,13 +175,14 @@
 
       // スタートボタンを押すとカウントダウン
       $('#start_button').click(function () {
-        cnt = 15; //10秒前からカウントスタート
+        cnt = 15; //15秒前からカウントスタート
         $('.limit').text(cnt);
         cnDown = setInterval(function () { //1秒おきにカウントマイナス
           cnt--;
           if (cnt <= 0) {   //0になったら停止する
             clearInterval(cnDown);   //カウントダウン停止
             clearInterval(TIMER);    //タイマー停止
+            $('.target').fadeOut();
           }
           $('.limit').text(cnt);
         }, 1000);
@@ -194,6 +212,54 @@
 
       //パンデミックモード：0～100の乱数で蚊を動かす
 
+
+      // 日時をいい感じの形式にする関数
+      function convertFromFirestoreTimestampToDatetime(timestamp) {
+        const _d = timestamp ? new Date(timestamp * 1000) : new Date();
+        const Y = _d.getFullYear();
+        const m = (_d.getMonth() + 1).toString().padStart(2, '0');
+        const d = _d.getDate().toString().padStart(2, '0');
+        const H = _d.getHours().toString().padStart(2, '0');
+        const i = _d.getMinutes().toString().padStart(2, '0');
+        const s = _d.getSeconds().toString().padStart(2, '0');
+        return `${Y}/${m}/${d} ${H}:${i}:${s}`;
+      };
+
+      // スコア登録ボタンを押すと、スコアを登録する処理
+      $('#score-entry').click(function () {
+        // 送信処理の記述
+        db.add({ // dbが送信先 送信データはオブジェクトの形
+          name: $('#name').val(),  // inputの入力値
+          score: score,  // scoreの入力値
+          time: firebase.firestore.FieldValue.serverTimestamp(), // 登録日時
+        });
+      });
+
+      // データをリアルタイムに取得する処理
+      db.orderBy('time', 'desc').onSnapshot(function (querySnapshot) {
+        // まずはconsole.log()で出力してデータの形を確認！
+        const dataArray = []; // 必要なデータだけが入った新しい配列を作成
+        querySnapshot.docs.forEach(function (doc) {
+          const data = {
+            id: doc.id,
+            data: doc.data(),
+          };
+          dataArray.push(data);
+        });
+        console.log(dataArray);
+
+        const tagArray = []; // `dataArray`は前回出てきたオブジェクトの配列
+        dataArray.forEach(function (data) {
+          tagArray.push(`
+        <li id=${data.id}>
+        <p>${data.data.name}</p>
+        <p>${data.data.score}</p>
+        <p>${convertFromFirestoreTimestampToDatetime(data.data.time.seconds)}</p>
+        </li>
+        `)
+        });
+        $('#output').html(tagArray);
+      });
 
     });
 

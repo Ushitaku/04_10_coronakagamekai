@@ -166,4 +166,10 @@ li{
     display: flex;
     justify-content: center;
     align-items: center;
-    display: none;
+    display: none ;
+}
+
+#output{
+    list-style: none;
+
+}
